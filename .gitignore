@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Data & model outputs (te groot voor git)
+data/
+*.pt
+*.pkl
+*.ckpt
