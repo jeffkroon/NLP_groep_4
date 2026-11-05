@@ -4,4 +4,3 @@ Verplicht volgens de projectopdracht: noteer wat je aan een (code)assistent over
 
 | Datum | Wie | Tool | Waarvoor |
 |-------|-----|------|----------|
-| 2026-10-28 | Jeff | Claude Code | Projectsetup: uv-omgeving, git, .gitignore, nbstripout |

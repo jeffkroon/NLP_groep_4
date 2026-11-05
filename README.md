@@ -18,7 +18,7 @@ Open de notebooks in VS Code en kies als kernel `.venv` (`./.venv/bin/python`), 
 | Map | Wat |
 |-----|-----|
 | `part1/` | Tutorialcode van het vak – niet aanpassen |
-| `src/` | Gedeelde code (`data`, `features`, `models`, `evaluate`) |
+| `src/` | Gedeelde code: `data` (laden + CV-splits), `features` (representaties), `models` (architecturen), `evaluate` (CV, macro-F1, Bayesiaanse vergelijking), `plots` (figuren) |
 | `notebooks/` | Verkennen en plotten, één notebook per persoon (`naam_onderwerp.ipynb`) |
 | `results/` | Kleine csv's met scores |
 | `scripts/` | Bijv. het downloaden van de dataset |
@@ -35,7 +35,10 @@ git push -u origin <taak>         # daarna Pull Request op GitHub, laat iemand r
 ```
 
 - Echte code in `src/`, notebooks roepen die aan. Nooit met z'n tweeën in hetzelfde notebook.
-- Gebruik `SEED` en `N_FOLDS` uit `src/data.py`, zodat ieders resultaten vergelijkbaar zijn.
+- Gebruik `SEEDS` en `N_FOLDS` uit `src/data.py`, zodat ieders resultaten vergelijkbaar zijn.
+- Data: `load_stance_all()` laadt alle vijf stance-topics (met `[topic]`-tag voor elke tweet); `load_stance(topic)` één topic.
+- Nieuwe representatie of model? Voeg hem toe aan `ENCODER_FACTORIES` (`src/features.py`) of `MODEL_RUNNERS` (`src/models.py`); de experimenten en figuren in het notebook pakken hem dan vanzelf mee.
+- Hoofdnotebook met alle experimenten: `notebooks/jeff_tokenizer.ipynb`. Na een wijziging in `src/`: kernel herstarten.
 - Packages toevoegen: `uv add <package>` en commit `pyproject.toml` + `uv.lock`.
 - AI gebruikt? Zet het in [`AI-GEBRUIK.md`](AI-GEBRUIK.md).
 
