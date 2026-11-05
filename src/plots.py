@@ -44,7 +44,7 @@ def plot_score_heatmap(f1_scores: dict, encoders: list, models: list, baseline: 
     colorbar = fig.colorbar(image, ax=ax, fraction=0.04)
     colorbar.set_label("macro-F1", color=TEXT_SECONDARY)
     colorbar.outline.set_visible(False)
-    ax.set_title(f"Gemiddelde macro-F1 per systeem (baseline altijd-meerderheid: {baseline:.3f})",
+    ax.set_title(f"Mean macro-F1 per system (majority baseline: {baseline:.3f})",
                  loc="left", color=TEXT_PRIMARY, fontsize=11)
     fig.tight_layout()
     return fig, ax
@@ -58,8 +58,8 @@ def plot_bayes_comparisons(comparisons: pd.DataFrame, title: str, strip: str = "
     rows = comparisons.iloc[::-1].reset_index(drop=True)
     short = lambda name: name.replace(strip, "") if strip else name
     fig, ax = plt.subplots(figsize=(10, 0.5 * len(rows) + 1.4))
-    segments = [("P(A beter)", DIVERGING_A, "white"), ("P(gelijk)", DIVERGING_TIE, TEXT_PRIMARY),
-                ("P(B beter)", DIVERGING_B, "white")]
+    segments = [("P(A better)", DIVERGING_A, "white"), ("P(equal)", DIVERGING_TIE, TEXT_PRIMARY),
+                ("P(B better)", DIVERGING_B, "white")]
     left = np.zeros(len(rows))
     for column, color, text_color in segments:
         widths = rows[column].to_numpy()
@@ -70,13 +70,13 @@ def plot_bayes_comparisons(comparisons: pd.DataFrame, title: str, strip: str = "
         left = left + widths
 
     ax.set_yticks(range(len(rows)), [f"{short(a)}  vs  {short(b)}" for a, b in zip(rows["A"], rows["B"])])
-    for y, verdict in enumerate(rows["conclusie"]):
+    for y, verdict in enumerate(rows["verdict"]):
         ax.text(1.02, y, short(verdict), va="center", fontsize=9, color=TEXT_PRIMARY, transform=ax.get_yaxis_transform())
     ax.set_xlim(0, 1)
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1], ["0%", "25%", "50%", "75%", "100%"])
     _style_axes(ax)
     handles = [plt.Rectangle((0, 0), 1, 1, color=c) for _, c, _ in segments]
-    ax.legend(handles, ["A beter", "praktisch gelijk (ROPE)", "B beter"], ncol=3, frameon=False,
+    ax.legend(handles, ["A better", "practically equal (ROPE)", "B better"], ncol=3, frameon=False,
               loc="upper left", bbox_to_anchor=(0, -0.08 if len(rows) > 2 else -0.2), fontsize=9)
     ax.set_title(title, loc="left", color=TEXT_PRIMARY, fontsize=11)
     fig.tight_layout()

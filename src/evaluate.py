@@ -17,7 +17,7 @@ from part1.experiment import train_tokenizer
 TOKENIZER_VOCAB_SIZE = 1000
 TOKENIZER_MIN_FREQUENCY = 2
 ROPE = 0.01  # verschil in macro-F1 dat we als "praktisch gelijk" beschouwen, zie motivatie in het notebook
-DECISION_THRESHOLD = 0.95  # vanaf deze kans trekken we een conclusie, anders "onbeslist"
+DECISION_THRESHOLD = 0.95  # vanaf deze kans trekken we een conclusie, anders "undecided"
 
 
 def _run_fold(fold: dict, encoder_factories: dict, model_runners: dict, num_classes: int) -> dict:
@@ -70,12 +70,12 @@ def majority_baseline_f1(cv_runs: list) -> float:
 
 def _verdict(p_a: float, p_tie: float, p_b: float, sys_a: str, sys_b: str) -> str:
     if p_a >= DECISION_THRESHOLD:
-        return f"{sys_a} beter"
+        return f"{sys_a} better"
     if p_b >= DECISION_THRESHOLD:
-        return f"{sys_b} beter"
+        return f"{sys_b} better"
     if p_tie >= DECISION_THRESHOLD:
-        return "praktisch gelijk"
-    return "onbeslist"
+        return "practically equal"
+    return "undecided"
 
 
 def _compare_pair(f1_scores: dict, sys_a: str, sys_b: str, runs: int, rope: float) -> dict:
@@ -83,9 +83,9 @@ def _compare_pair(f1_scores: dict, sys_a: str, sys_b: str, runs: int, rope: floa
     p_a, p_tie, p_b = comparison.probs(rope)
     return {
         "A": sys_a, "B": sys_b,
-        "gem. verschil (B-A)": comparison.mean_diff,
-        "P(A beter)": p_a, "P(gelijk)": p_tie, "P(B beter)": p_b,
-        "conclusie": _verdict(p_a, p_tie, p_b, sys_a, sys_b),
+        "mean diff (B-A)": comparison.mean_diff,
+        "P(A better)": p_a, "P(equal)": p_tie, "P(B better)": p_b,
+        "verdict": _verdict(p_a, p_tie, p_b, sys_a, sys_b),
     }
 
 
