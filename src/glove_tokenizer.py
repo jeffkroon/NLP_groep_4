@@ -57,3 +57,10 @@ def preprocess(text: str) -> str:
 def tokenize(text: str) -> list[str]:
     """Tweet -> lijst tokens die aansluiten bij de GloVe Twitter-vocabulaire."""
     return _TOKEN.findall(preprocess(text))
+
+
+def tokenize_plain(text: str) -> list[str]:
+    """Gewone tokenisatie zonder Twitter-tokens (voor GloVe 6B / Wikipedia): kleine letters, samentrekkingen
+    en leestekens los, maar geen <user>/<hashtag>/... ('#feminism' wordt '#', 'feminism')."""
+    text = _NEGATION.sub(r"\1 n't", text.lower())
+    return _TOKEN.findall(_CLITIC.sub(r"\1 \2", text))
