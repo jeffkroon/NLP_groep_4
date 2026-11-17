@@ -36,3 +36,18 @@ def coverage(texts: list[str], tokenizer: Callable[[str], list[str]], vocab: set
 def coverage_table(texts: list[str], setups: dict) -> pd.DataFrame:
     """setups: {naam: (tokenizer, vocab)} -> één rij per opzet."""
     return pd.DataFrame({name: coverage(texts, tok, vocab) for name, (tok, vocab) in setups.items()}).T
+
+
+def write_subset(source: Path, target: Path, words: set[str]) -> int:
+    """Schrijf alleen de regels van `words` uit een GloVe .txt naar `target`; geeft het aantal woorden terug.
+
+    Zo is de embeddingtabel ~10k woorden i.p.v. 1.2M: sneller laden en modelbestanden van KB's i.p.v. 240 MB.
+    Geen datalek: het zijn voorgetrainde vectoren, we kiezen alleen welke woorden we opzoeken.
+    """
+    kept = 0
+    with open(source, encoding="utf-8") as src, open(target, "w", encoding="utf-8") as dst:
+        for line in src:
+            if line.split(" ", 1)[0] in words:
+                dst.write(line)
+                kept += 1
+    return kept

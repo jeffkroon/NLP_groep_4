@@ -7,6 +7,8 @@ Zonder deze stap wordt bv. "#feminism" een onbekend woord, terwijl "<hashtag> fe
 
 import re
 
+from part2.clslib import PretrainedEmbeddings, Tokenizer
+
 EYES = r"[8:=;]"
 NOSE = r"['`\-]?"
 
@@ -64,3 +66,17 @@ def tokenize_plain(text: str) -> list[str]:
     en leestekens los, maar geen <user>/<hashtag>/... ('#feminism' wordt '#', 'feminism')."""
     text = _NEGATION.sub(r"\1 n't", text.lower())
     return _TOKEN.findall(_CLITIC.sub(r"\1 \2", text))
+
+
+class GloveTwitterTokenizer(Tokenizer):
+    """Tokenizer voor part2.experiment: tokens zoals GloVe Twitter, ids uit de vocabulaire van het embeddingmodel."""
+
+    def __init__(self, emb_model: PretrainedEmbeddings):
+        self.emb_model = emb_model
+
+    def tokens(self, text: str) -> list[str]:
+        return tokenize(text)
+
+    def ids(self, text: str) -> list[int]:
+        """Onbekende tokens krijgen het id van <unk>."""
+        return [self.emb_model.index(token) for token in self.tokens(text)]
