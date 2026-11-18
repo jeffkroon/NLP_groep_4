@@ -95,6 +95,12 @@ def compare_systems(f1_scores: dict, systems: list, runs: int, rope: float = ROP
     return pd.DataFrame(rows).round(3)
 
 
+def compare_pairs(f1_scores: dict, pairs: list, runs: int, rope: float = ROPE) -> pd.DataFrame:
+    """Zelfde test als compare_systems, maar alleen voor de gekozen paren [(A, B), ...]."""
+    rows = [_compare_pair(f1_scores, a, b, runs, rope) for a, b in pairs]
+    return pd.DataFrame(rows).round(3)
+
+
 def plot_comparison(f1_scores: dict, sys_a: str, sys_b: str, runs: int, rope: float = ROPE):
     """Posterior van het verschil (B-A) met de ROPE, zoals in de tutorial."""
     return BenavoliCorrelatedT(f1_scores[sys_a], f1_scores[sys_b], runs=runs, names=[sys_a, sys_b]).plot(rope)
